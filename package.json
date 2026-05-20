@@ -1,0 +1,14 @@
+{
+  "name": "kirlian_discharge",
+  "version": "1.0.0",
+  "description": "Kirlian discharge and plasma visualization simulator",
+  "type": "module",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "npx serve . -p 8080",
+    "dev": "npx vite"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
