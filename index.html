@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kirlian Discharge Simulator</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ── Main simulation canvas ─────────────────────────── -->
+    <canvas id="discharge-canvas" aria-label="Kirlian discharge simulation"></canvas>
+
+    <!-- ── Loading indicator ──────────────────────────────── -->
+    <div id="loading-msg">◈ Solving Laplace field…</div>
+
+    <!-- ── Controls panel ─────────────────────────────────── -->
+    <aside id="controls-panel" aria-label="Simulation controls">
+
+      <div class="panel-header">
+        <h1>⚡ Kirlian Discharge</h1>
+        <div class="subtitle">Corona plasma simulator · DBM + Townsend</div>
+      </div>
+
+      <!-- ─ Electrical parameters ─ -->
+      <div class="section-label">Electrical</div>
+
+      <div class="control-group">
+        <label>
+          Voltage
+          <span class="val" id="voltage-value">50 kV</span>
+        </label>
+        <input type="range" id="voltage-slider"
+               min="1" max="100" step="1" value="50"
+               aria-label="Voltage in kilovolts" />
+        <div class="hint">Peak applied voltage (1–100 kV AC).</div>
+      </div>
+
+      <div class="control-group">
+        <label>
+          Frequency
+          <span class="val" id="frequency-value">50 kHz</span>
+        </label>
+        <input type="range" id="frequency-slider"
+               min="10" max="500" step="10" value="50"
+               aria-label="Frequency in kilohertz" />
+        <div class="hint">AC supply frequency. Higher → faster corona pulsing.</div>
+      </div>
+
+      <!-- ─ Atmospheric ─ -->
+      <div class="section-label">Atmospheric</div>
+
+      <div class="control-group">
+        <label>
+          Humidity
+          <span class="val" id="humidity-value">50 %</span>
+        </label>
+        <input type="range" id="humidity-slider"
+               min="0" max="100" step="1" value="50"
+               aria-label="Relative humidity percent" />
+        <div class="hint">
+          High RH → more filaments, blue-white OH* emission,
+          lower breakdown voltage.
+        </div>
+      </div>
+
+      <!-- ─ Physics model ─ -->
+      <div class="section-label">Physics Model</div>
+
+      <div class="control-group">
+        <label>
+          DBM&nbsp;&eta; (branching)
+          <span class="val" id="eta-value">2.00</span>
+        </label>
+        <input type="range" id="eta-slider"
+               min="0.5" max="4.0" step="0.1" value="2.0"
+               aria-label="DBM eta branching exponent" />
+        <div class="hint">
+          η = 1 → DLA-like diffuse · η = 4 → deterministic<br />
+          Fractal dim D ≈ 2 − 1/(η+1)
+        </div>
+      </div>
+
+      <!-- ─ Polarity ─ -->
+      <div class="section-label">Polarity</div>
+
+      <div class="btn-group">
+        <button id="polarity-btn" class="btn" aria-pressed="false">
+          Positive ⚡
+        </button>
+      </div>
+
+      <!-- ─ Controls ─ -->
+      <div class="section-label">Controls</div>
+
+      <div class="btn-group">
+        <button id="reset-btn"  class="btn">▶ Clear Streamers</button>
+        <button id="reinit-btn" class="btn">⟳ Reinitialise Field</button>
+      </div>
+
+      <!-- ─ Physics notes ─ -->
+      <div class="physics-note">
+        <span>Field solver:</span> 2-D Laplace SOR (ω = 1.85)<br />
+        <span>Growth model:</span> Niemeyer–Pietronero DBM<br />
+        <span>Ionisation:</span> Townsend α/η<sub>a</sub> for air<br />
+        <span>Humidity:</span> Magnus formula + IEC k<sub>v</sub><br />
+        <span>Colours:</span> N₂ 2nd positive + OH* emission<br />
+        <br />
+        Open browser console for live API:<br />
+        <span>system.config.voltage = 80</span><br />
+        <span>system.dbm.setEta(3.5)</span>
+      </div>
+
+    </aside><!-- #controls-panel -->
+  </div><!-- #app -->
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

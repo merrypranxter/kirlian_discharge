@@ -1,0 +1,308 @@
+/* ============================================================
+   Kirlian Discharge Simulator — main stylesheet
+   Aesthetic: deep-space laboratory, plasma colours (cyan/violet)
+   ============================================================ */
+
+/* ── Reset / base ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-deep:      #030007;
+  --bg-panel:     #08000f;
+  --bg-panel2:    #0e0020;
+  --border:       rgba(80, 0, 160, 0.45);
+  --border-hi:    rgba(0, 220, 190, 0.35);
+  --text-primary: #c8f0e8;
+  --text-dim:     #6a8f88;
+  --accent-cyan:  #00eebb;
+  --accent-violet:#cc44ff;
+  --accent-pink:  #ff80ff;
+  --slider-track: rgba(60, 0, 120, 0.6);
+  --slider-thumb: #aa33ff;
+  --panel-width:  280px;
+  --font-mono:    "Courier New", Courier, monospace;
+  --font-ui:      system-ui, -apple-system, sans-serif;
+}
+
+html, body {
+  width:  100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+/* ── App layout ───────────────────────────────────────────── */
+#app {
+  display:  flex;
+  width:    100vw;
+  height:   100vh;
+  position: relative;
+}
+
+/* ── Canvas ───────────────────────────────────────────────── */
+#discharge-canvas {
+  flex:    1 1 auto;
+  display: block;
+  cursor:  crosshair;
+  /* prevent sub-pixel anti-aliasing gaps */
+  image-rendering: pixelated;
+}
+
+/* ── Loading overlay ──────────────────────────────────────── */
+#loading-msg {
+  position:  absolute;
+  top:       50%;
+  left:      50%;
+  transform: translate(-50%, -50%);
+  background: rgba(5, 0, 15, 0.90);
+  border:     1px solid var(--accent-violet);
+  padding:    18px 36px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size:   13px;
+  color:       var(--accent-cyan);
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  z-index: 10;
+  /* animated flicker */
+  animation: flicker 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  from { opacity: 0.75; }
+  to   { opacity: 1.00; }
+}
+
+/* ── Controls panel ───────────────────────────────────────── */
+#controls-panel {
+  width:        var(--panel-width);
+  flex:         0 0 var(--panel-width);
+  height:       100vh;
+  overflow-y:   auto;
+  background:   var(--bg-panel);
+  border-left:  1px solid var(--border);
+  display:      flex;
+  flex-direction: column;
+  gap:          0;
+  padding:      0 0 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--slider-thumb) var(--bg-panel2);
+}
+
+#controls-panel::-webkit-scrollbar       { width: 5px; }
+#controls-panel::-webkit-scrollbar-track { background: var(--bg-panel2); }
+#controls-panel::-webkit-scrollbar-thumb { background: var(--slider-thumb); border-radius: 3px; }
+
+/* Panel header */
+.panel-header {
+  padding:       16px 18px 14px;
+  border-bottom: 1px solid var(--border);
+  background:    var(--bg-panel2);
+}
+
+.panel-header h1 {
+  font-family:   var(--font-mono);
+  font-size:     13px;
+  font-weight:   normal;
+  letter-spacing: 0.12em;
+  color:         var(--accent-cyan);
+  text-transform: uppercase;
+}
+
+.panel-header .subtitle {
+  font-size:  10px;
+  color:      var(--text-dim);
+  margin-top: 3px;
+  font-family: var(--font-mono);
+}
+
+/* Section label */
+.section-label {
+  font-family:   var(--font-mono);
+  font-size:     9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color:         var(--text-dim);
+  padding:       14px 18px 6px;
+}
+
+/* Control group */
+.control-group {
+  padding:     6px 18px 10px;
+  border-bottom: 1px solid rgba(60, 0, 100, 0.22);
+}
+
+.control-group label {
+  display:     flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size:   11px;
+  color:       var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.control-group .val {
+  color:       var(--accent-cyan);
+  font-size:   12px;
+  min-width:   60px;
+  text-align:  right;
+}
+
+/* Sliders */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance:   none;
+  width:        100%;
+  height:       4px;
+  background:   var(--slider-track);
+  border-radius: 2px;
+  outline:      none;
+  cursor:       pointer;
+  border:       none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance:   none;
+  width:        14px;
+  height:       14px;
+  border-radius: 50%;
+  background:   var(--slider-thumb);
+  cursor:       pointer;
+  box-shadow:   0 0 6px rgba(180, 60, 255, 0.6);
+  transition:   background 0.15s, box-shadow 0.15s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background:  var(--accent-pink);
+  box-shadow:  0 0 10px rgba(255, 120, 255, 0.8);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width:        14px;
+  height:       14px;
+  border-radius: 50%;
+  background:   var(--slider-thumb);
+  border:       none;
+  cursor:       pointer;
+  box-shadow:   0 0 6px rgba(180, 60, 255, 0.6);
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 12px rgba(0, 220, 190, 0.8);
+}
+
+/* Description / unit hint */
+.hint {
+  font-size:   9px;
+  color:       var(--text-dim);
+  font-family: var(--font-mono);
+  margin-top:  4px;
+  line-height: 1.4;
+}
+
+/* ── Button strip ─────────────────────────────────────────── */
+.btn-group {
+  padding:  12px 18px;
+  display:  flex;
+  gap:      8px;
+  flex-direction: column;
+}
+
+.btn {
+  appearance:    none;
+  background:    rgba(60, 0, 120, 0.5);
+  color:         var(--text-primary);
+  border:        1px solid var(--border);
+  border-radius: 3px;
+  padding:       8px 12px;
+  font-family:   var(--font-mono);
+  font-size:     11px;
+  letter-spacing: 0.06em;
+  cursor:        pointer;
+  text-align:    center;
+  transition:    background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.btn:hover {
+  background:   rgba(100, 0, 200, 0.55);
+  border-color: var(--border-hi);
+  box-shadow:   0 0 8px rgba(0, 200, 160, 0.25);
+  color:        var(--accent-cyan);
+}
+
+.btn:active {
+  background: rgba(0, 180, 140, 0.2);
+}
+
+/* Polarity button states */
+#polarity-btn {
+  color:        var(--accent-cyan);
+  border-color: rgba(0, 200, 160, 0.4);
+}
+
+#polarity-btn.negative {
+  color:        var(--accent-violet);
+  border-color: rgba(180, 40, 255, 0.5);
+  background:   rgba(80, 0, 140, 0.5);
+}
+
+/* ── Physics info footer ──────────────────────────────────── */
+.physics-note {
+  padding:     14px 18px 0;
+  font-size:   9px;
+  font-family: var(--font-mono);
+  color:       var(--text-dim);
+  line-height: 1.65;
+  border-top:  1px solid rgba(60, 0, 100, 0.25);
+  margin-top:  8px;
+}
+
+.physics-note span {
+  color:      var(--accent-violet);
+  font-size:  9px;
+}
+
+/* ── Responsive: narrow viewport collapses panel ─────────── */
+@media (max-width: 600px) {
+  :root {
+    --panel-width: 100vw;
+  }
+
+  #app {
+    flex-direction: column;
+  }
+
+  #discharge-canvas {
+    height: 55vh;
+    flex: none;
+  }
+
+  #controls-panel {
+    height:     45vh;
+    width:      100vw;
+    border-left: none;
+    border-top:  1px solid var(--border);
+    overflow-y:  auto;
+    flex-direction: row;
+    flex-wrap:   wrap;
+    gap:         0;
+  }
+
+  .control-group {
+    width: 50%;
+    border-right: 1px solid rgba(60, 0, 100, 0.2);
+  }
+}
